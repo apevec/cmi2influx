@@ -47,32 +47,77 @@ for key in output_data:
 # Adapt things below this for your own UVR1611 installation
 # 
 
-heisswasserspeicher=inputs[5] # Temperature Hot water buffer
-vorlauf=inputs[10] # Temperature of Inlet Flow
-heizungsaussentemperatur=inputs[11] # Outside temperature
-speicherunten=networkanalog[2] # Main buffer top
-speicheroben=networkanalog[3] # Main buffer bottom
-ladepumpewarmwasser=outputs[3] # Pump to charge the hot water buffer
-anforderungkessel=outputs[5] # Signal to burner
-heizkreispumpe=outputs[4] # Main Heating pump
+# EfG.de WP with WEM2
+# TODO move parameter mapping to the config
+##inputs:
+#AussentemperaturS1
+#SpeicherkuppelS2
+#SpeicherkopfS3
+#SpeicherHeizoneObenS4
+#SpeicherHeizoneUntenS5
+#SpeicherLadeleitungS6
+#RaumtemperaturS8
+#WA_VLT_S10
+#WA_RLT_S11
+#WE2_BT_S12
+#SolareinspeisetemperaturS13
+#SolarstrahlungS15
+#WE2_RLT_S16
+##outputs:
+#AnforderungWE1
+##networkanalog:
+#WP_Zielspreizung
+#WP_kWh
+#WP_COP
+#WP_Vorlauftemperatur
+#WP_Ruecklauftemperatur
+#WP_Systemtemperatur
+AussentemperaturS1 = inputs[1]
+SpeicherkuppelS2 = inputs[2]
+SpeicherkopfS3 = inputs[3]
+SpeicherHeizoneObenS4 = inputs[4]
+SpeicherHeizoneUntenS5 = inputs[5]
+SpeicherLadeleitungS6 = inputs[6]
+RaumtemperaturS8 = inputs[8]
+WA_VLT_S10 = inputs[10]
+WA_RLT_S11 = inputs[11]
+WE2_BT_S12 = inputs[12]
+WE2_RLT_S16 = inputs[16]
+AnforderungWE1 = outputs[5]
+WP_Zielspreizung = networkanalog[1]
+WP_kWh = networkanalog[2]
+WP_COP = networkanalog[3]
+WP_Vorlauftemperatur = networkanalog[4]
+WP_Ruecklauftemperatur = networkanalog[5]
+WP_Systemtemperatur = networkanalog[6]
 
 client = InfluxDBClient(influxip,8086, influxusername, influxpassword, influxdb)
 json_body = [
-		{
+{
             "measurement": "heating",
             "tags": {
                 "host": influxtaghost,
                 "region": influxtagregion
             },
             "fields": {
-                "warmwasserspeicher": heisswasserspeicher, 
-				"vorlauftemperatur": vorlauf,
-				"heizungsaussentemperatur": heizungsaussentemperatur,
-				"pufferspeicheroben": speicheroben,
-				"pufferspeicherunten": speicherunten,
-				"ladepumpewarmwasser": ladepumpewarmwasser,
-				"anforderungkessel": anforderungkessel,
-				"heizkreispumpe": heizkreispumpe
+                "AussentemperaturS1":     AussentemperaturS1,
+                "SpeicherkuppelS2":       SpeicherkuppelS2,
+                "SpeicherkopfS3":         SpeicherkopfS3,
+                "SpeicherHeizoneObenS4":  SpeicherHeizoneObenS4,
+                "SpeicherHeizoneUntenS5": SpeicherHeizoneUntenS5,
+                "SpeicherLadeleitungS6":  SpeicherLadeleitungS6,
+                "RaumtemperaturS8":       RaumtemperaturS8,
+                "WA_VLT_S10":             WA_VLT_S10,
+                "WA_RLT_S11":             WA_RLT_S11,
+                "WE2_BT_S12":             WE2_BT_S12,
+                "WE2_RLT_S16":            WE2_RLT_S16,
+                "AnforderungWE1":         AnforderungWE1,
+                "WP_Zielspreizung":       WP_Zielspreizung,
+                "WP_kWh":                 WP_kWh,
+                "WP_COP":                 WP_COP,
+                "WP_Vorlauftemperatur":   WP_Vorlauftemperatur,
+                "WP_Ruecklauftemperatur": WP_Ruecklauftemperatur,
+                "WP_Systemtemperatur":    WP_Systemtemperatur
             }
         }
     ]
