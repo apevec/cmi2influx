@@ -5,7 +5,6 @@ import requests
 from influxdb import InfluxDBClient 
 import configparser
 import sys
-import paho.mqtt.client as mqtt
 
 configfilename=sys.argv[1]
 config = configparser.ConfigParser()
@@ -21,12 +20,6 @@ influxusername=config.get('main','influxusername')
 influxpassword=config.get('main','influxusername')
 influxtaghost=config.get('main','influxtaghost')
 influxtagregion=config.get('main','influxtagregion')
-mqttip = config.get('main','mqttip')
-mqtttopicprefix = config.get('main','mqtttopicprefix')
-mqtttopicprefix_assembled = mqtttopicprefix+"/"+influxtagregion+"/"+influxtaghost
-
-mqttclient =mqtt.Client("cmi2influx")
-mqttclient.connect(mqttip)
 
 url = "http://"+ip+"/INCLUDE/api.cgi?jsonnode="+can_node+"&jsonparam=I,O,Na";
 
@@ -39,17 +32,14 @@ networkanalog_data = data["Data"]["Network Analog"]
 
 inputs={}
 for key in input_data:
- mqttclient.publish(mqtttopicprefix_assembled+"/input/"+str(key["Number"]),str(key["Value"]["Value"]))
  inputs[key["Number"]]=key["Value"]["Value"]
 
 networkanalog={}
 for key in networkanalog_data:
- mqttclient.publish(mqtttopicprefix_assembled+"/networkanalog/"+str(key["Number"]),str(key["Value"]["Value"]))
  networkanalog[key["Number"]]=key["Value"]["Value"] 
 
 outputs={}
 for key in output_data:
- mqttclient.publish(mqtttopicprefix_assembled+"/output/"+str(key["Number"]),str(key["Value"]["Value"]))
  outputs[key["Number"]]=key["Value"]["Value"]
 
 
